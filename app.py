@@ -4,28 +4,30 @@ import psycopg2
 import numpy as np
 import plotly.express as px
 
+
+st.write("Secrets loaded:", dict(st.secrets))
+
 st.set_page_config(page_title="Test", layout="wide")
 
 st.write("🚀 App started")
 
 try:
-    import psycopg2
-    st.write("✅ psycopg2 OK")
+    conn = get_conn()
+    st.success("✅ DB connected")
+    conn.close()
 except Exception as e:
-    st.error(f"❌ psycopg2 lỗi: {e}")
-
-try:
-    import plotly.express as px
-    st.write("✅ plotly OK")
-except Exception as e:
-    st.error(f"❌ plotly lỗi: {e}")
-
+    st.error(e)
 
 
 def get_conn():
     try:
+        host = st.secrets.get("DB_HOST", "")
+        if host == "":
+            st.error("❌ Secrets chưa load")
+            st.stop()
+
         return psycopg2.connect(
-            host=st.secrets["DB_HOST"],
+            host=host,
             database=st.secrets["DB_NAME"],
             user=st.secrets["DB_USER"],
             password=st.secrets["DB_PASS"],
