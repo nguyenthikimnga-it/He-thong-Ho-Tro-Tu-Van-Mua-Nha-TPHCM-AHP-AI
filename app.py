@@ -5,16 +5,18 @@ import numpy as np
 import plotly.express as px
 
 
-
+st.write("APP RUNNING")
 def get_conn():
     return psycopg2.connect(
-        host="aws-1-ap-northeast-1.pooler.supabase.com",
-        database="postgres",
-        user="postgres.owciwoejfjnyhayjbynm",
-        password="Bds@Tphcm2026",
-        port=5432,
+        host=st.secrets["DB_HOST"],
+        database=st.secrets["DB_NAME"],
+        user=st.secrets["DB_USER"],
+        password=st.secrets["DB_PASS"],
+        port=st.secrets["DB_PORT"],
         sslmode="require"
     )
+
+
 @st.cache_data(ttl=60)
 
 def load_data():
