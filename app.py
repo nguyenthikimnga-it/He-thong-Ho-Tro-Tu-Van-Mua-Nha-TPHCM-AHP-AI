@@ -4,8 +4,24 @@ import psycopg2
 import numpy as np
 import plotly.express as px
 
-st.set_page_config(page_title="Hệ chuyên gia BĐS", layout="wide")
-st.write("APP RUNNING")
+st.set_page_config(page_title="Test", layout="wide")
+
+st.write("🚀 App started")
+
+try:
+    import psycopg2
+    st.write("✅ psycopg2 OK")
+except Exception as e:
+    st.error(f"❌ psycopg2 lỗi: {e}")
+
+try:
+    import plotly.express as px
+    st.write("✅ plotly OK")
+except Exception as e:
+    st.error(f"❌ plotly lỗi: {e}")
+
+
+
 def get_conn():
     return psycopg2.connect(
         host=st.secrets["DB_HOST"],
