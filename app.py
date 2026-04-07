@@ -5,27 +5,13 @@ import numpy as np
 import plotly.express as px
 
 
-st.write("Secrets loaded:", dict(st.secrets))
+# 1. Cấu hình trang 
+st.set_page_config(page_title="Hệ thống tư vấn nhà TP.HCM", layout="wide")
 
-st.set_page_config(page_title="Test", layout="wide")
-
-st.write("🚀 App started")
-
-try:
-    conn = get_conn()
-    st.success("✅ DB connected")
-    conn.close()
-except Exception as e:
-    st.error(e)
-
-
+# 2. Định nghĩa hàm kết nối TRƯỚC khi sử dụng
 def get_conn():
     try:
-        host = st.secrets.get("DB_HOST", "")
-        if host == "":
-            st.error("❌ Secrets chưa load")
-            st.stop()
-
+        # Sử dụng cấu trúc secrets chuẩn của Streamlit cho PostgreSQL
         return psycopg2.connect(
             host=st.secrets["connections"]["postgresql"]["host"],
             database=st.secrets["connections"]["postgresql"]["database"],
@@ -34,33 +20,26 @@ def get_conn():
             port=st.secrets["connections"]["postgresql"]["port"]
         )
     except Exception as e:
-        st.error(f"❌ Cannot connect DB: {e}")
+        st.error(f"❌ Không thể kết nối Database: {e}")
         st.stop()
 
+# 3. Các hàm xử lý dữ liệu
 @st.cache_data(ttl=60)
-
 def load_data():
     try:
         conn = get_conn()
-
         df = pd.read_sql("SELECT * FROM danh_sach_nha", conn)
         conn.close()
         return df
-
     except Exception as e:
-        st.error(f"❌ Lỗi Supabase: {e}")
+        st.error(f"❌ Lỗi nạp dữ liệu từ Supabase: {e}")
         return None
 
 def save_chat_to_db(user_msg, ai_res):
     try:
-        
         conn = get_conn()
-
         cur = conn.cursor()
-        
-        # Lấy tên khách hàng từ session_state (nếu có)
         customer_name = st.session_state.get('cust_name', 'Khách vãng lai')
-        
         query = """
             INSERT INTO chat_history (customer_name, user_message, ai_response)
             VALUES (%s, %s, %s)
@@ -71,6 +50,21 @@ def save_chat_to_db(user_msg, ai_res):
         conn.close()
     except Exception as e:
         print(f"Lỗi lưu chat: {e}")
+
+# --- PHẦN GIAO DIỆN CHÍNH ---
+st.title("🏠 Hệ thống Hỗ trợ Quyết định Bất động sản tại TP.HCM")
+
+# Kiểm tra kết nối ngay khi vào App
+try:
+    with st.spinner('Đang kết nối hệ thống...'):
+        conn_test = get_conn()
+        st.sidebar.success("✅ Đã kết nối Supabase")
+        conn_test.close()
+except:
+    pass
+
+
+
 
 def hien_thi_khung_chat(top_1):
     # 1. Khởi tạo biến show_chat nếu chưa có
@@ -332,8 +326,7 @@ def set_bg():
 
 set_bg()
 
-st.title("🏠 Hệ thống Hỗ trợ Quyết định Bất động sản Mua Nhà tạiTP.HCM")
-st.markdown("---")
+
 
 try:
     df_raw = load_data()
