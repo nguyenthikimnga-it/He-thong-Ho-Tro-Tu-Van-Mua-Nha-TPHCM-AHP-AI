@@ -4,7 +4,7 @@ import psycopg2
 import numpy as np
 import plotly.express as px
 
-
+st.set_page_config(page_title="Hệ chuyên gia BĐS", layout="wide")
 st.write("APP RUNNING")
 def get_conn():
     return psycopg2.connect(
@@ -251,7 +251,7 @@ def save_consultation(name, phone, email, id, score, advice):
 if 'registered' not in st.session_state:
     st.session_state.registered = False
 
-st.set_page_config(page_title="Hệ chuyên gia BĐS", layout="wide")
+
 
 def set_bg():
     st.markdown(
