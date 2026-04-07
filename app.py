@@ -23,15 +23,18 @@ except Exception as e:
 
 
 def get_conn():
-    return psycopg2.connect(
-        host=st.secrets["DB_HOST"],
-        database=st.secrets["DB_NAME"],
-        user=st.secrets["DB_USER"],
-        password=st.secrets["DB_PASS"],
-        port=st.secrets["DB_PORT"],
-        sslmode="require"
-    )
-
+    try:
+        return psycopg2.connect(
+            host=st.secrets["DB_HOST"],
+            database=st.secrets["DB_NAME"],
+            user=st.secrets["DB_USER"],
+            password=st.secrets["DB_PASS"],
+            port=int(st.secrets["DB_PORT"]),
+            sslmode="require"
+        )
+    except Exception as e:
+        st.error(f"❌ Cannot connect DB: {e}")
+        st.stop()
 
 @st.cache_data(ttl=60)
 
