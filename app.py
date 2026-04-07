@@ -27,12 +27,11 @@ def get_conn():
             st.stop()
 
         return psycopg2.connect(
-            host=host,
-            database=st.secrets["DB_NAME"],
-            user=st.secrets["DB_USER"],
-            password=st.secrets["DB_PASS"],
-            port=int(st.secrets["DB_PORT"]),
-            sslmode="require"
+            host=st.secrets["connections"]["postgresql"]["host"],
+            database=st.secrets["connections"]["postgresql"]["database"],
+            user=st.secrets["connections"]["postgresql"]["user"],
+            password=st.secrets["connections"]["postgresql"]["password"],
+            port=st.secrets["connections"]["postgresql"]["port"]
         )
     except Exception as e:
         st.error(f"❌ Cannot connect DB: {e}")
