@@ -4,17 +4,22 @@ import psycopg2
 import numpy as np
 import plotly.express as px
 
+
+
+def get_conn():
+    return psycopg2.connect(
+        host="aws-1-ap-northeast-1.pooler.supabase.com",
+        database="postgres",
+        user="postgres.owciwoejfjnyhayjbynm",
+        password="Bds@Tphcm2026",
+        port=5432,
+        sslmode="require"
+    )
 @st.cache_data(ttl=60)
+
 def load_data():
     try:
-        conn = psycopg2.connect(
-            host="aws-1-ap-northeast-1.pooler.supabase.com",
-            database="postgres",
-            user="postgres.owciwoejfjnyhayjbynm",
-            password="Bds@Tphcm2026",
-            port="5432",
-            sslmode="require"
-        )
+        conn = get_conn()
 
         df = pd.read_sql("SELECT * FROM danh_sach_nha", conn)
         conn.close()
@@ -26,10 +31,9 @@ def load_data():
 
 def save_chat_to_db(user_msg, ai_res):
     try:
-        conn = psycopg2.connect(
-            host="localhost", database="HeHoTroQuyetDinh", 
-            user="postgres", password="admin", port="5432"
-        )
+        
+        conn = get_conn()
+
         cur = conn.cursor()
         
         # Lấy tên khách hàng từ session_state (nếu có)
@@ -132,25 +136,24 @@ def hien_thi_khung_chat(top_1):
 
 def view_all_appointments():
     try:
-        # Sử dụng thông số kết nối của bạn
-        conn = psycopg2.connect(
-            host="localhost", database="HeHoTroQuyetDinh", 
-            user="postgres", password="admin", port="5432"
-        )
+        conn = get_conn()
+
         query = """
             SELECT 
-                a.ngay_xem AS "Ngày xem", 
-                a.gio_xem AS "Giờ xem", 
-                c.full_name AS "Tên khách hàng", 
-                a.id AS "Mã căn nhà", 
-                a.ghi_chu AS "Ghi chú"
+                a.ngay_xem, 
+                a.gio_xem, 
+                c.full_name, 
+                a.id, 
+                a.ghi_chu
             FROM appointments a
             JOIN customers c ON a.customer_id = c.customer_id
-            ORDER BY a.ngay_xem DESC, a.gio_xem DESC
+            ORDER BY a.ngay_xem DESC
         """
+
         df = pd.read_sql(query, conn)
         conn.close()
         return df
+
     except Exception as e:
         st.error(f"Lỗi khi nạp lịch hẹn: {e}")
         return None
@@ -158,31 +161,31 @@ def view_all_appointments():
 
 def save_appointment(cust_name, id, date, time, note):
     try:
-        conn = psycopg2.connect(
-            host="localhost", database="HeHoTroQuyetDinh", 
-            user="postgres", password="admin", port="5432"
-        )
+        conn = get_conn()
         cur = conn.cursor()
-        
-        # Bước 1: Tìm customer_id từ tên khách hàng đã đăng ký
-        cur.execute("SELECT customer_id FROM customers WHERE full_name = %s ORDER BY customer_id DESC LIMIT 1", (cust_name,))
+
+        cur.execute(
+            "SELECT customer_id FROM customers WHERE full_name = %s ORDER BY customer_id DESC LIMIT 1",
+            (cust_name,)
+        )
         result = cur.fetchone()
-        
+
         if result:
             c_id = result[0]
-            # Bước 2: Chèn vào bảng appointments với customer_id đúng
-            query = """
+            cur.execute("""
                 INSERT INTO appointments (customer_id, id, ngay_xem, gio_xem, ghi_chu)
                 VALUES (%s, %s, %s, %s, %s)
-            """
-            cur.execute(query, (c_id, id, date, time, note))
+            """, (c_id, id, date, time, note))
+
             conn.commit()
             cur.close()
             conn.close()
             return True
+
         else:
-            st.error("Không tìm thấy thông tin khách hàng trong hệ thống.")
+            st.error("Không tìm thấy khách hàng")
             return False
+
     except Exception as e:
         st.error(f"❌ Lỗi hệ thống: {e}")
         return False
@@ -190,7 +193,8 @@ def save_appointment(cust_name, id, date, time, note):
 
 def delete_consultation_history():
     try:
-        conn = psycopg2.connect(host="localhost", database="HeHoTroQuyetDinh", user="postgres", password="admin", port="5432")
+        conn = get_conn()
+        
         cur = conn.cursor()
         cur.execute("DELETE FROM consultation_history")
         cur.execute("DELETE FROM customers")
@@ -204,24 +208,28 @@ def delete_consultation_history():
 
 def load_consultation_history():
     try:
-        conn = psycopg2.connect(host="localhost", database="HeHoTroQuyetDinh", user="postgres", password="admin", port="5432")
+        conn = get_conn()
+
         query = """
-            SELECT c.full_name as "Khách hàng", c.phone as "SĐT", h.id as "Mã nhà đề xuất", 
-                   h.score_ahp as "Điểm AHP", h.loi_khuyen_ai as "Lời khuyên", h.ngay_tu_van as "Thời gian"
+            SELECT c.full_name, c.phone, h.id, 
+                   h.score_ahp, h.loi_khuyen_ai, h.ngay_tu_van
             FROM consultation_history h
             JOIN customers c ON h.customer_id = c.customer_id
-            ORDER BY h.ngay_tu_van DESC LIMIT 10;
+            ORDER BY h.ngay_tu_van DESC
         """
+
         df = pd.read_sql(query, conn)
         conn.close()
         return df
+
     except Exception as e:
         st.error(f"❌ Lỗi nạp lịch sử: {e}")
         return None
 
 def save_consultation(name, phone, email, id, score, advice):
     try:
-        conn = psycopg2.connect(host="localhost", database="HeHoTroQuyetDinh", user="postgres", password="admin", port="5432")
+        conn = get_conn()
+        
         cur = conn.cursor()
         cur.execute("INSERT INTO customers (full_name, phone, email) VALUES (%s, %s, %s) RETURNING customer_id", (name, phone, email))
         c_id = cur.fetchone()[0]
@@ -644,11 +652,16 @@ if df_raw is not None:
                     st.markdown("---")
                     st.header("💬 Nhật ký tư vấn AI")
                     try:
-                        conn_temp = connect_db() 
-                        df_chat = pd.read_sql("SELECT * FROM chat_history ORDER BY timestamp DESC", conn_temp)
+                        conn_temp = get_conn()
+                        df_chat = pd.read_sql(
+                            "SELECT * FROM chat_history ORDER BY created_at DESC",
+                            conn_temp
+                        )
                         st.dataframe(df_chat, use_container_width=True)
                         conn_temp.close()
+
                     except Exception as e:
                         st.error(f"Không thể hiển thị nhật ký chat: {e}")
+                        
                 elif pwd != "":
                     st.error("❌ Mật khẩu không chính xác!")
