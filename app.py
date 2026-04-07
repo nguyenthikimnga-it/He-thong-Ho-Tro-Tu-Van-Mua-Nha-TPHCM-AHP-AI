@@ -334,7 +334,13 @@ set_bg()
 st.title("🏠 Hệ thống Hỗ trợ Quyết định Bất động sản Mua Nhà tạiTP.HCM")
 st.markdown("---")
 
-df_raw = load_data()
+try:
+    df_raw = load_data()
+except Exception as e:
+    st.error(f"❌ load_data lỗi: {e}")
+    df_raw = None
+
+
 
 if df_raw is not None:
     # --- LỚP 1: BỘ LỌC TRI THỨC (SIDEBAR) ---
