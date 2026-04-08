@@ -675,7 +675,7 @@ if df_raw is not None:
                     try:
                         conn_temp = get_conn()
                         df_chat = pd.read_sql(
-                            "SELECT * FROM chat_history ORDER BY created_at DESC",
+                            "SELECT * FROM chat_history ORDER BY timestamp DESC",
                             conn_temp
                         )
                         st.dataframe(df_chat, use_container_width=True)
