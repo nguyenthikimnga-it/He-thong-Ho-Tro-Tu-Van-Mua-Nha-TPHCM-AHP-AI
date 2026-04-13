@@ -52,7 +52,11 @@ def save_chat_to_db(user_msg, ai_res):
         print(f"Lỗi lưu chat: {e}")
 
 # --- PHẦN GIAO DIỆN CHÍNH ---
-st.title("🏠 Hệ thống Hỗ trợ Quyết định Bất động sản tại TP.HCM")
+st.markdown("""
+<h1 class="main-title">
+🏠 Hệ thống Hỗ trợ Quyết định Bất động sản tại TP.HCM
+</h1>
+""", unsafe_allow_html=True)
 
 # Kiểm tra kết nối ngay khi vào App
 try:
@@ -366,7 +370,19 @@ def set_bg():
     .block-container{
         padding: 0.7rem !important;
     }
+}
+.main-title{
+    font-size: 34px;
+    line-height: 1.3;
+    font-weight: 700;
+}
 
+/* mobile */
+@media (max-width:768px){
+    .main-title{
+        font-size: 22px;
+        line-height: 1.4;
+    }
 }
         </style>
         """,
