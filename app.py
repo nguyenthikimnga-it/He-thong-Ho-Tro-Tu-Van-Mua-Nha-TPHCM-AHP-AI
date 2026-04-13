@@ -375,6 +375,7 @@ def set_bg():
     font-size: 34px;
     line-height: 1.3;
     font-weight: 700;
+    word-break: keep-all;
 }
 
 /* mobile */
@@ -382,6 +383,7 @@ def set_bg():
     .main-title{
         font-size: 22px;
         line-height: 1.4;
+        word-break: keep-all;
     }
 }
         </style>
