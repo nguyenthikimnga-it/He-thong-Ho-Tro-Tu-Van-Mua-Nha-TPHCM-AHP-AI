@@ -266,6 +266,7 @@ if 'registered' not in st.session_state:
     st.session_state.registered = False
 
 
+
 def set_bg():
     st.markdown(
         """
@@ -275,7 +276,6 @@ def set_bg():
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: #222 !important;
         }
 
         /* Overlay + blur */
@@ -287,22 +287,33 @@ def set_bg():
             width: 100%;
             height: 100%;
             backdrop-filter: blur(6px);
-            background: rgba(255,255,255,0.25); /* đổi từ đen sang trắng */
+            background: rgba(0,0,0,0.3);
             z-index: -1;
         }
 
-        /* ép màu chữ */
-        h1, h2, h3, h4, h5, h6, p, span, div, label {
-            color: #222 !important;
-        }
-
+        /* Container */
         .block-container {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 15px;
         }
 
+        /* Card hiệu ứng hover */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        /* Button */
         .stButton>button {
             background-color: #2E8B57;
             color: white;
