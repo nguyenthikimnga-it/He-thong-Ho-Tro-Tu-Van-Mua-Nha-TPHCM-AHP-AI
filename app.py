@@ -379,6 +379,8 @@ def set_bg():
     word-break: keep-all;
     margin-top: 0 !important;
     padding-top: 0 !important;
+    overflow: visible !important;
+
 }
 .block-container{
     padding-top: 1rem !important;
