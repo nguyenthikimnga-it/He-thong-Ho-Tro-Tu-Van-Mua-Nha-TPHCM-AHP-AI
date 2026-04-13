@@ -377,7 +377,11 @@ def set_bg():
     line-height: 1.3;
     font-weight: 700;
     word-break: keep-all;
-    white-space: normal;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+.block-container{
+    padding-top: 1rem !important;
 }
 
 @media (max-width:768px){
