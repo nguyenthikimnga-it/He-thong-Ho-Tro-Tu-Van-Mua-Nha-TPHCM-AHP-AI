@@ -57,13 +57,10 @@ st.title("🏠 Hệ thống Hỗ trợ Quyết định Bất động sản tại
 # Kiểm tra kết nối ngay khi vào App
 try:
     with st.spinner('Đang kết nối hệ thống...'):
-        conn_test = get_conn()
-        st.sidebar.success("✅ Đã kết nối Supabase")
+        conn_test = get_conn()      
         conn_test.close()
 except:
     pass
-
-
 
 
 def hien_thi_khung_chat(top_1):
@@ -307,6 +304,70 @@ def set_bg():
             color: white;
             border-radius: 8px;
         }
+
+
+/* Mobile */
+@media (max-width: 768px){
+
+    /* thu nhỏ padding */
+    .block-container{
+        padding: 1rem !important;
+    }
+
+    /* thu nhỏ tiêu đề lớn */
+    h1{
+        font-size: 24px !important;
+        line-height: 1.3 !important;
+    }
+
+    h2{
+        font-size: 20px !important;
+    }
+
+    h3{
+        font-size: 18px !important;
+    }
+
+    /* số KPI */
+    .metric-container{
+        font-size: 14px !important;
+    }
+
+    /* card */
+    .card{
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    /* ảnh card */
+    img{
+        border-radius: 12px !important;
+    }
+
+    /* button */
+    .stButton>button{
+        width: 100% !important;
+        font-size: 14px !important;
+    }
+
+}
+
+/* Mobile nhỏ */
+@media (max-width: 480px){
+
+    h1{
+        font-size: 20px !important;
+    }
+
+    h2{
+        font-size: 18px !important;
+    }
+
+    .block-container{
+        padding: 0.7rem !important;
+    }
+
+}
         </style>
         """,
         unsafe_allow_html=True
@@ -326,7 +387,6 @@ except Exception as e:
 
 if df_raw is not None:
     # --- LỚP 1: BỘ LỌC TRI THỨC (SIDEBAR) ---
-    st.sidebar.header("🔍 Lớp 1: Thiết lập yêu cầu")
 
     # Phân loại khu vực chuẩn theo thực tế 20 quận/huyện trong DB của bạn
     dict_khu_vuc = {
