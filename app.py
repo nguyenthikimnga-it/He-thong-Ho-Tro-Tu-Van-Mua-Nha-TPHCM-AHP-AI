@@ -53,10 +53,10 @@ def save_chat_to_db(user_msg, ai_res):
 
 # --- PHẦN GIAO DIỆN CHÍNH ---
 st.markdown("""
-<h1 class="main-title">
+<h2 style="margin-top:0;">
 🏠 Hệ thống Hỗ trợ Quyết định<br>
-Bất động sản mua nhà tại&nbsp;TP.HCM
-</h1>
+Bất động sản mua nhà tại TP.HCM
+</h2>
 """, unsafe_allow_html=True)
 
 # Kiểm tra kết nối ngay khi vào App
@@ -266,20 +266,20 @@ def save_consultation(name, phone, email, id, score, advice):
 # --- 2. CẤU HÌNH GIAO DIỆN ---
 if 'registered' not in st.session_state:
     st.session_state.registered = False
-
+    
 def set_bg():
     st.markdown(
         """
         <style>
+        /* nền chung */
         .stApp {
             background-image: url("https://images.unsplash.com/photo-1494526585095-c41746248156");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: #222 !important;
         }
 
-        /* Overlay + blur */
+        /* lớp blur */
         .stApp::before {
             content: "";
             position: fixed;
@@ -288,116 +288,64 @@ def set_bg():
             width: 100%;
             height: 100%;
             backdrop-filter: blur(6px);
-            background: rgba(255,255,255,0.25); /* đổi từ đen sang trắng */
+            background: rgba(255,255,255,0.35);
             z-index: -1;
         }
 
-        /* ép màu chữ */
-        h1, h2, h3, h4, h5, h6, p, span, div, label {
+        /* ép chữ luôn màu đen */
+        body, h1, h2, h3, h4, h5, h6, p, span, div, label {
             color: #222 !important;
         }
 
+        /* container */
         .block-container {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.9);
             backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 15px;
         }
 
+        /* button */
         .stButton>button {
             background-color: #2E8B57;
-            color: white;
+            color: white !important;
             border-radius: 8px;
         }
 
+        /* MOBILE */
+        @media (max-width: 768px){
+            .block-container{
+                padding: 1rem !important;
+            }
 
-/* Mobile */
-@media (max-width: 768px){
+            h1{
+                font-size: 22px !important;
+                line-height: 1.3 !important;
+            }
 
-    /* thu nhỏ padding */
-    .block-container{
-        padding: 1rem !important;
-    }
+            h2{
+                font-size: 20px !important;
+            }
 
-    /* thu nhỏ tiêu đề lớn */
-    h1{
-        font-size: 24px !important;
-        line-height: 1.3 !important;
-    }
+            h3{
+                font-size: 18px !important;
+            }
 
-    h2{
-        font-size: 20px !important;
-    }
+            .stButton>button{
+                width: 100% !important;
+            }
+        }
 
-    h3{
-        font-size: 18px !important;
-    }
+        /* mobile nhỏ */
+        @media (max-width: 480px){
+            h1{ font-size: 20px !important; }
+            h2{ font-size: 18px !important; }
+        }
 
-    /* số KPI */
-    .metric-container{
-        font-size: 14px !important;
-    }
-
-    /* card */
-    .card{
-        padding: 12px !important;
-        border-radius: 12px !important;
-    }
-
-    /* ảnh card */
-    img{
-        border-radius: 12px !important;
-    }
-
-    /* button */
-    .stButton>button{
-        width: 100% !important;
-        font-size: 14px !important;
-    }
-
-}
-
-/* Mobile nhỏ */
-@media (max-width: 480px){
-
-    h1{
-        font-size: 20px !important;
-    }
-
-    h2{
-        font-size: 18px !important;
-    }
-
-    .block-container{
-        padding: 0.7rem !important;
-    }
-}
-.main-title{
-    font-size: 32px;
-    line-height: 1.3;
-    font-weight: 700;
-    word-break: keep-all;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    overflow: visible !important;
-
-}
-.block-container{
-    padding-top: 1rem !important;
-}
-
-@media (max-width:768px){
-    .main-title{
-        font-size: 22px;
-        line-height: 1.4;
-        word-break: keep-all;
-    }
-}
         </style>
         """,
         unsafe_allow_html=True
     )
-
 set_bg()
 
 
