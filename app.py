@@ -53,7 +53,7 @@ def save_chat_to_db(user_msg, ai_res):
 
 # --- PHẦN GIAO DIỆN CHÍNH ---
 st.markdown("""
-<h2 style="margin-top:0;">
+<h2 style="padding-top: 10px;">
 🏠 Hệ thống Hỗ trợ Quyết định<br>
 Bất động sản mua nhà tại TP.HCM
 </h2>
@@ -271,7 +271,6 @@ def set_bg():
     st.markdown(
         """
         <style>
-        /* nền chung */
         .stApp {
             background-image: url("https://images.unsplash.com/photo-1494526585095-c41746248156");
             background-size: cover;
@@ -279,7 +278,6 @@ def set_bg():
             background-attachment: fixed;
         }
 
-        /* lớp blur */
         .stApp::before {
             content: "";
             position: fixed;
@@ -288,66 +286,42 @@ def set_bg():
             width: 100%;
             height: 100%;
             backdrop-filter: blur(6px);
-            background: rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.45); /* Tăng độ đậm nền trắng một chút */
             z-index: -1;
         }
 
-        /* ép chữ luôn màu đen */
-        body, h1, h2, h3, h4, h5, h6, p, span, div, label {
-            color: #222 !important;
+        /* Khóa màu chữ cho toàn bộ app */
+        html, body, [data-testid="stSidebar"] > div:first-child, .stApp, .stMarkdown, p, span, label {
+            color: #222222 !important;
         }
 
-        /* container */
         .block-container {
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 15px;
+            margin-top: 20px; /* Thêm margin để không dính đỉnh */
         }
 
-        /* button */
-        .stButton>button {
-            background-color: #2E8B57;
-            color: white !important;
-            border-radius: 8px;
-        }
-
-        /* MOBILE */
         @media (max-width: 768px){
-            .block-container{
-                padding: 1rem !important;
+            .block-container {
+                padding-top: 4rem !important; /* Đẩy xuống để không bị header che */
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-top: 0 !important;
             }
-
-            h1{
-                font-size: 22px !important;
-                line-height: 1.3 !important;
-            }
-
-            h2{
+            h2 {
                 font-size: 20px !important;
-            }
-
-            h3{
-                font-size: 18px !important;
-            }
-
-            .stButton>button{
-                width: 100% !important;
+                line-height: 1.4 !important;
+                color: #222222 !important; /* Ép màu lần nữa cho h2 mobile */
             }
         }
-
-        /* mobile nhỏ */
-        @media (max-width: 480px){
-            h1{ font-size: 20px !important; }
-            h2{ font-size: 18px !important; }
-        }
-
         </style>
         """,
         unsafe_allow_html=True
     )
-set_bg()
 
+set_bg()
 
 
 try:
